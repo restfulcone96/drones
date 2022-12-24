@@ -71,7 +71,7 @@ namespace DebrisCollection
                     float y = objects[j].Item2;
                     float distance = (float)Math.Sqrt((x - x_drone) * (x - x_drone) + (y - y_drone) * (y - y_drone));
                     // Check if the object is within the range of the drone's ladle
-                   if (distance <= r)
+                   if (distance < r)
                     {
                         // Check if the object size is a prime number
                         if (IsPrime(objects[j].Item3))
