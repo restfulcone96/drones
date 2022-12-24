@@ -82,10 +82,6 @@ namespace DebrisCollection
                         {
                             b++;
                         }
-                        // Remove the object from the list
-                        objects.RemoveAt(j);
-                        // Decrement the index to account for the removed object
-                        j--;
                     }
                 }
                 // Print the output for the current drone
