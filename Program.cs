@@ -1,84 +1,63 @@
-using System;
+// Read the number of drones
+int n = int.Parse(Console.ReadLine());
 
-
-int[] x = new Int32[2];
-int[] y = new Int32[2];
-int[] d = new Int32[2];
-
-string str = "1 1 10";
-String[] strlist = str.Split(" ", 3,
-               StringSplitOptions.RemoveEmptyEntries);
-
-int count = 2;
-int m = 0;
-foreach (String s in strlist)
+// Read the drone data
+List<Tuple<float, float, float>> drones = new List<Tuple<float, float, float>>();
+for (int i = 0; i < n; i++)
 {
-    m = Convert.ToInt32(s);
-    Console.WriteLine("X Coordinates", strlist[s]);
-
-    x[0] = m;
-    //y[0] = Convert.ToInt32(strlist[s]);
-    //d[0] = Convert.ToInt32(strlist[s]);
-
+  string[] input = Console.ReadLine().Split();
+  float x = float.Parse(input[0]);
+  float y = float.Parse(input[1]);
+  float r = float.Parse(input[2]);
+  drones.Add(Tuple.Create(x, y, r));
 }
 
+// Read the number of objects
+int m = int.Parse(Console.ReadLine());
 
-for (int k = 0; k <= count; k++)
+// Read the object data
+List<Tuple<float, float, int>> objects = new List<Tuple<float, float, int>>();
+for (int i = 0; i < m; i++)
 {
-Console.WriteLine("X Coordinates", x[0]);
-    Console.WriteLine("Y Coordinates", y[0]);
-    Console.WriteLine("Distance", d[0]);
-
+  string[] input = Console.ReadLine().Split();
+  float x = float.Parse(input[0]);
+  float y = float.Parse(input[1]);
+  int a = int.Parse(input[2]);
+  objects.Add(Tuple.Create(x, y, a));
 }
 
-int no_of_drones = Convert.ToInt32(Console.ReadLine());
-
-        string[] drones = new string[no_of_drones];
-        int i;
-        for (i = 0; i < no_of_drones; i++)
-        {
-            drones[i] = Console.ReadLine();
-}
-        Console.WriteLine(no_of_drones);
-        for (i = 0; i < no_of_drones; i++)
-        {
-            Console.WriteLine(drones[i]);
-        }
-
-int noOfObjects = Convert.ToInt32(Console.ReadLine());
-string[] objects = new string[noOfObjects];
-int j;
-for (j = 0; j < noOfObjects; j++)
+// Iterate over the drones
+for (int i = 0; i < n; i++)
 {
-    objects[j] = Console.ReadLine();
-}
-Console.WriteLine(noOfObjects);
-for (j = 0; j < noOfObjects; j++)
-{
-    Console.WriteLine(objects[j]);
-}
-
-
-
-Console.ReadKey();
-
-        int total_objects = 0;
-    
-
-namespace measure_distance
-{
-    class Program
+  // Initialize counters for organic-type and other-type objects
+  int a = 0;
+  int b = 0;
+  // Get the current drone's data
+  float x_drone = drones[i].Item1;
+  float y_drone = drones[i].Item2;
+  float r = drones[i].Item3;
+  // Iterate over the objects
+  foreach (var obj in objects)
+  {
+    // Calculate the distance between the object and the drone's ladle
+    float x = obj.Item1;
+    float y = obj.Item2;
+    float distance = (float)Math.Sqrt((x - x_drone) * (x - x_drone) + (y - y_drone) * (y - y_drone));
+    // If the distance is less than or equal to the size of the ladle, the object can be picked up
+    if (distance <= r)
     {
-        static void Main(string[] args)
-        {
-            int x1, x2, y1, y2;
-            x1 = 0;
-            x2 = 1;
-            y1 = 0;
-            y2 = 1;
-            var distance = Math.Sqrt((Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2)));
-   
-            Console.WriteLine(distance);
-        }
+      // Increment the counter based on object type - If its prime number, then its non-organic and can be picked for removal
+      int a_obj = obj.Item3;
+      if (a_obj % 2 == 0)
+      {
+        a++;
+      }
+      else
+      {
+        b++;
+      }
     }
+  }
+  // Output the results for the drone
+  Console.WriteLine("DRON {0}: {1} - {2}", i, b, a);
 }
