@@ -5,10 +5,10 @@ class Section
 {
     public uint id;
     public float saltPercentage;
-    public int temperature;
+    public float temperature;
     public float score;
 
-    public Section(uint id, float saltPercentage, int temperature)
+    public Section(uint id, float saltPercentage, float temperature)
     {
         this.id = id;
         this.saltPercentage = saltPercentage;
@@ -16,7 +16,7 @@ class Section
         this.score = CalculateScore(saltPercentage, temperature);
     }
 
-    private float CalculateScore(float saltPercentage, int temperature)
+    private float CalculateScore(float saltPercentage, float temperature)
     {
         float saltScore = 0;
         if (saltPercentage >= 50) {
@@ -59,7 +59,7 @@ class Program
             string[] sectionData = Console.ReadLine().Split(' ');
             uint id = uint.Parse(sectionData[0]);
             float saltPercentage = float.Parse(sectionData[1]);
-            int temperature = int.Parse(sectionData[2]);
+            float temperature = float.Parse(sectionData[2]);
             sections.Add(new Section(id, saltPercentage, temperature));
         }
         
