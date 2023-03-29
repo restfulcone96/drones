@@ -66,17 +66,26 @@ class Program
         //sort in ascending order
         sections.Sort((s1, s2) => s1.score.CompareTo(s2.score));
         
+        //sort with id
+        //sections.Sort((s1, s2) => s1.id.CompareTo(s2.id));
+        
 for (int i = 0; i < numSections; i++) {
     Console.WriteLine("Section {0} Score {1}", sections[i].id, sections[i].score);
 }
+
+//List<Section> result1 = new List<Section>();
         // swap the sections
-for (int i = 0; i < numSections; i++) {
+for (int i = 0; i < numSections/2; i++) {
      Section lowScoreSection = sections[i];
      Section highScoreSection = sections[(int)numSections - i - 1];
 
      if (lowScoreSection.id != highScoreSection.id) {
          if (lowScoreSection.score < highScoreSection.score) {
+           
+           //result1.Add(new Section(sections[i].id, "Sekce {0} se prohodila se sekcí {1}.", lowScoreSection.id, highScoreSection.id));
+             
              Console.WriteLine("Sekce {0} se prohodila se sekcí {1}.", lowScoreSection.id, highScoreSection.id);
+             Console.WriteLine("Sekce {1} se prohodila se sekcí {0}.", lowScoreSection.id, highScoreSection.id);
 
              // Swap the sections in the list
             sections[i] = highScoreSection;
