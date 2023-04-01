@@ -24,7 +24,9 @@ class Section
             saltScore = 0;
         } else if (saltPercentage > 10) {
             saltScore = 1 / (2 * saltPercentage);
-        } else if (saltPercentage >= 2) {
+        } else if (saltPercentage > 2 && saltPercentage < 10) {
+            saltScore = 2 / saltPercentage;
+        } else if (saltPercentage <= 2) {
             saltScore = 2 / saltPercentage;
         } else {
             saltScore = 0;
@@ -35,10 +37,12 @@ class Section
             temperatureScore = 0;
         } else if (temperature > 26) {
             temperatureScore = 0.6f - 0.1f * (temperature - 26);
-        } else if (temperature >= 22) {
+        } else if (temperature > 22 && temperature < 26) {
             temperatureScore = 1;
-        } else if (temperature >= 18) {
+        } else if (temperature <= 22) {
             temperatureScore = 0.5f * (temperature - 18) / 4;
+        } else if (temperature <= 18) {
+            temperatureScore = 0;
         } else {
             temperatureScore = 0;
         }
