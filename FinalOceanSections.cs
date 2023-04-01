@@ -63,44 +63,39 @@ class Program
             sections.Add(new Section(id, saltPercentage, temperature));
         }
         
-        //sort in ascending order
-        sections.Sort((s1, s2) => s1.score.CompareTo(s2.score));
-        
-         // create a dictionary to store information about swapped sections
+        // sort the sections in ascending order by score using OrderBy
+        sections = sections.OrderBy(s => s.score).ToList();
+
+        // create a dictionary to store information about swapped sections
         Dictionary<uint, uint> swaps = new Dictionary<uint, uint>();
         
-for (int i = 0; i < numSections; i++) {
-    Console.WriteLine("Section {0} Score {1}", sections[i].id, sections[i].score);
-}
+        foreach (Section section in sections) {
+            Console.WriteLine("Section {0} Score {1}", section.id, section.score);
+        }
 
         // swap the sections
-for (int i = 0; i < numSections/2; i++) {
-     Section lowScoreSection = sections[i];
-     Section highScoreSection = sections[(int)numSections - i - 1];
+        for (int i = 0; i < numSections/2; i++) {
+            Section lowScoreSection = sections[i];
+            Section highScoreSection = sections[(int)numSections - i - 1];
 
-     if (lowScoreSection.id != highScoreSection.id) {
-         if (lowScoreSection.score < highScoreSection.score) {
-           
-             
-             //Console.WriteLine("Sekce {0} se prohodila se sekcí {1}.", lowScoreSection.id, highScoreSection.id);
-             //Console.WriteLine("Sekce {1} se prohodila se sekcí {0}.", lowScoreSection.id, highScoreSection.id);
+            if (lowScoreSection.id != highScoreSection.id) {
+                if (lowScoreSection.score < highScoreSection.score) {
+                    // Swap the sections in the list
+                    sections[i] = highScoreSection;
+                    sections[(int)numSections - i - 1] = lowScoreSection;
 
-             // Swap the sections in the list
-            sections[i] = highScoreSection;
-             sections[(int)numSections - i - 1] = lowScoreSection;
-             
-            
-            // Store information about the swapped sections in the dictionary
-            swaps[lowScoreSection.id] = highScoreSection.id;
-            swaps[highScoreSection.id] = lowScoreSection.id;
-         }
-     } else {
-         Console.WriteLine("Sekce {0} zůstala na své pozici.", lowScoreSection.id, highScoreSection.id);
- }
-}
+                    // Store information about the swapped sections in the dictionary
+                    swaps[lowScoreSection.id] = highScoreSection.id;
+                    swaps[highScoreSection.id] = lowScoreSection.id;
+                }
+            } else {
+                Console.WriteLine("Sekce {0} zůstala na své pozici.", lowScoreSection.id, highScoreSection.id);
+            }
+        }
 
-// sort the sections by id
-        sections.Sort((s1, s2) => s1.id.CompareTo(s2.id));
+        // sort the sections by id
+        sections = sections.OrderBy(s => s.id).ToList();
+
 
 
 // print the sorted sections with information about swapped sections
