@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 class Section
 {
     public uint id;
@@ -24,7 +25,7 @@ class Section
             saltScore = 0;
         } else if (saltPercentage > 10) {
             saltScore = 1 / (2 * saltPercentage);
-        } else if ( 2 >= saltPercentage && saltPercentage <= 10) {
+        } else if (2 <= saltPercentage && saltPercentage <= 10) {
             saltScore = 2 / saltPercentage;
         } else if (saltPercentage <= 2) {
             saltScore = 0;
@@ -37,7 +38,7 @@ class Section
             temperatureScore = 0;
         } else if (temperature > 26) {
             temperatureScore = 0.6f - 0.1f * (temperature - 26);
-        } else if (22 >= temperature && temperature <= 26) {
+        } else if (22 <= temperature && temperature <= 26) {
             temperatureScore = 1;
         } else if (temperature <= 22) {
             temperatureScore = 0.5f * (temperature - 18) / 4;
@@ -75,7 +76,7 @@ class Program
         Dictionary<uint, uint> swaps = new Dictionary<uint, uint>();
         
         foreach (Section section in sections) {
-            Console.WriteLine("Section {0} Score {1}", section.id, section.score);
+            //Console.WriteLine("Section {0} Score {1}", section.id, section.score);
         }
 
         // swap the sections
