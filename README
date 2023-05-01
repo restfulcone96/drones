@@ -2,3 +2,15 @@ Test file
 https://ssps.cajthaml.eu/2-pva/work/22-ocistec-ocenu
 https://ssps.cajthaml.eu/2-pva/work/38-presun-zivocichu
 https://ssps.cajthaml.eu/2-pva/work/50-robonda
+
+
+
+Create a program for robots
+- Sensors to reach a point and pick up info
+- Console.Readline to send standard input
+- ||| to seperate commands
+
+Function to validate commands - validateCmd() 
+Function to update positionv based on command - UpdatePosition()
+Original Position of robot - variable
+if validateCmd == false Server should STOP
