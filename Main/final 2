@@ -140,45 +140,40 @@ public class MessageCommand : ICommand
     {
         //server.SendResponse("S004 PICK");
         server.SendResponse("SERVER: " + message);
+        
         server.SendResponse("S003 " + GetDirectionToOrigin(robot));
+        server.SendResponse("SERVER: " + message);
+        Console.WriteLine("SERVER: STOP");
+
     }
 
-    private static string GetDirectionToOrigin(Robot robot)
+    private string GetDirectionToOrigin(Robot robot)
     {
         int originX = robot.OriginalX;
         int originY = robot.OriginalY;
-        int robotX = robot.X;
-        int robotY = robot.Y;
-
-        while (robot.X != originX && robot.Y != originY) {
 
             if (robot.X < originX)
             {
-                Console.WriteLine("S003 RIGHT");
-                robotX++;
+                return "RIGHT";
             }
             else if (robot.X > originX)
             {
-                Console.WriteLine("S003 LEFT");
-                robotX--;
+                return "LEFT";
             }
             else if (robot.Y < originY)
             {
-                Console.WriteLine("S003 UP");
-                robotY++;
+                return "UP";
             }
             else if (robot.Y > originY)
             {
-                Console.WriteLine("S003 DOWN");
-                robotY--;
+                return "DOWN";
             }
             else
             {
-                return null;
+                return "OK";
             }
         }
     }
-}
 
 public class Server
 {
