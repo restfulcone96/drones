@@ -87,11 +87,45 @@ public class PositionCommand : ICommand
 
 public class OkCommand : ICommand
 {
+    public OkCommand()
+    {
+    }
+
     public void Execute(Server server, Robot robot)
     {
-        server.SendResponse("S003 OK");
+        int targetX = 0;
+        int targetY = 0;
+
+        if (robot.X == targetX && robot.Y == targetY)
+        {
+            server.SendResponse("S004 PICK");
+            return;
+        }
+
+        if (robot.X < targetX)
+        {
+            server.SendResponse("S003 RIGHT");
+            robot.SetPosition(robot.X + 1, robot.Y);
+        }
+        else if (robot.X > targetX)
+        {
+            server.SendResponse("S003 LEFT");
+            robot.SetPosition(robot.X - 1, robot.Y);
+        }
+        else if (robot.Y < targetY)
+        {
+            server.SendResponse("S003 UP");
+            robot.SetPosition(robot.X, robot.Y + 1);
+        }
+        else if (robot.Y > targetY)
+        {
+            server.SendResponse("S003 DOWN");
+            robot.SetPosition(robot.X, robot.Y - 1);
+        }
+
     }
 }
+
 
 public class MessageCommand : ICommand
 {
@@ -104,35 +138,44 @@ public class MessageCommand : ICommand
 
     public void Execute(Server server, Robot robot)
     {
-        server.SendResponse("S004 PICK");
+        //server.SendResponse("S004 PICK");
         server.SendResponse("SERVER: " + message);
         server.SendResponse("S003 " + GetDirectionToOrigin(robot));
     }
 
-    private string GetDirectionToOrigin(Robot robot)
+    private static string GetDirectionToOrigin(Robot robot)
     {
         int originX = robot.OriginalX;
         int originY = robot.OriginalY;
+        int robotX = robot.X;
+        int robotY = robot.Y;
 
-        if (robot.X < originX)
-        {
-            return "RIGHT";
-        }
-        else if (robot.X > originX)
-        {
-            return "LEFT";
-        }
-        else if (robot.Y < originY)
-        {
-            return "UP";
-        }
-        else if (robot.Y > originY)
-        {
-            return "DOWN";
-        }
-        else
-        {
-            return "OK";
+        while (robot.X != originX && robot.Y != originY) {
+
+            if (robot.X < originX)
+            {
+                Console.WriteLine("S003 RIGHT");
+                robotX++;
+            }
+            else if (robot.X > originX)
+            {
+                Console.WriteLine("S003 LEFT");
+                robotX--;
+            }
+            else if (robot.Y < originY)
+            {
+                Console.WriteLine("S003 UP");
+                robotY++;
+            }
+            else if (robot.Y > originY)
+            {
+                Console.WriteLine("S003 DOWN");
+                robotY--;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
@@ -152,7 +195,6 @@ public class Server
 
         if (commandObject == null)
         {
-            SendResponse("Invalid command");
             SendResponse("SERVER: STOP");
             Environment.Exit(0);
         }
@@ -197,11 +239,8 @@ public class Program
     {
         CommandFactory commandFactory = new CommandFactory();
         Server server = new Server(commandFactory);
-        Robot robot = new Robot(3, 0);
-
-        server.SendResponse("S001 HELLO");
-        server.SendResponse("S002 POSITION");
-
+        Robot robot = new Robot(0, 0);
+      
         while (true)
         {
             string command = Console.ReadLine();
