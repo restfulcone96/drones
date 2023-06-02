@@ -1,0 +1,211 @@
+using System;
+
+public class CommandFactory
+{
+    public ICommand GetCommand(string command)
+    {
+        string[] parts = command.Split(' ');
+        string commandType = parts[0];
+
+        switch (commandType)
+        {
+            case "C001":
+                return new HelloCommand();
+            case "C002":
+                int x = int.Parse(parts[1]);
+                int y = int.Parse(parts[2]);
+                return new PositionCommand(x, y);
+            case "C003":
+                return new OkCommand();
+            case "C004":
+                string message = string.Join(' ', parts, 1, parts.Length - 1);
+                return new MessageCommand(message);
+            default:
+                return null;
+        }
+    }
+}
+
+public interface ICommand
+{
+    void Execute(Server server, Robot robot);
+}
+
+public class HelloCommand : ICommand
+{
+    public void Execute(Server server, Robot robot)
+    {
+        server.SendResponse("S001 HELLO");
+        server.SendResponse("S002 POSITION");
+    }
+}
+
+public class PositionCommand : ICommand
+{
+    private int x;
+    private int y;
+
+    public PositionCommand(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void Execute(Server server, Robot robot)
+    {
+        robot.SetPosition(x, y);
+        server.SendResponse("S003 " + GetDirectionToTarget(robot));
+    }
+
+    private string GetDirectionToTarget(Robot robot)
+    {
+        int targetX = 0;
+        int targetY = 0;
+
+        if (robot.X < targetX)
+        {
+            return "RIGHT";
+        }
+        else if (robot.X > targetX)
+        {
+            return "LEFT";
+        }
+        else if (robot.Y < targetY)
+        {
+            return "UP";
+        }
+        else if (robot.Y > targetY)
+        {
+            return "DOWN";
+        }
+        else
+        {
+            return "OK";
+        }
+    }
+}
+
+public class OkCommand : ICommand
+{
+    public void Execute(Server server, Robot robot)
+    {
+        server.SendResponse("S003 OK");
+    }
+}
+
+public class MessageCommand : ICommand
+{
+    private string message;
+
+    public MessageCommand(string message)
+    {
+        this.message = message;
+    }
+
+    public void Execute(Server server, Robot robot)
+    {
+        server.SendResponse("S004 PICK");
+        server.SendResponse("SERVER: " + message);
+        server.SendResponse("S003 " + GetDirectionToOrigin(robot));
+    }
+
+    private string GetDirectionToOrigin(Robot robot)
+    {
+        int originX = robot.OriginalX;
+        int originY = robot.OriginalY;
+
+        if (robot.X < originX)
+        {
+            return "RIGHT";
+        }
+        else if (robot.X > originX)
+        {
+            return "LEFT";
+        }
+        else if (robot.Y < originY)
+        {
+            return "UP";
+        }
+        else if (robot.Y > originY)
+        {
+            return "DOWN";
+        }
+        else
+        {
+            return "OK";
+        }
+    }
+}
+
+public class Server
+{
+    private CommandFactory commandFactory;
+
+    public Server(CommandFactory commandFactory)
+    {
+        this.commandFactory = commandFactory;
+    }
+
+    public void ExecuteCommand(string command, Robot robot)
+    {
+        ICommand commandObject = commandFactory.GetCommand(command);
+
+        if (commandObject == null)
+        {
+            SendResponse("Invalid command");
+            SendResponse("SERVER: STOP");
+            Environment.Exit(0);
+        }
+
+        commandObject.Execute(this, robot);
+    }
+
+    public void SendResponse(string response)
+    {
+        Console.WriteLine(response);
+    }
+}
+
+public class Robot
+{
+    private int x;
+    private int y;
+    private int originalX;
+    private int originalY;
+
+    public int X { get { return x; } }
+    public int Y { get { return y; } }
+    public int OriginalX { get { return originalX; } }
+    public int OriginalY { get { return originalY; } }
+
+    public Robot(int originalX, int originalY)
+    {
+        this.originalX = originalX;
+        this.originalY = originalY;
+    }
+
+    public void SetPosition(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        CommandFactory commandFactory = new CommandFactory();
+        Server server = new Server(commandFactory);
+        Robot robot = new Robot(3, 0);
+
+        server.SendResponse("S001 HELLO");
+        server.SendResponse("S002 POSITION");
+
+        while (true)
+        {
+            string command = Console.ReadLine();
+            server.ExecuteCommand(command, robot);
+        }
+    }
+}
